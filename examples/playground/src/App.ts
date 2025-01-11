@@ -1,5 +1,6 @@
 import {h, reactive} from "chibivue";
 import {CounterComponent} from "./Counter";
+import {SomeText} from "./SomeText";
 
 export const AppComponent = {
 	setup() {
@@ -9,13 +10,14 @@ export const AppComponent = {
 			state.message += '!'
 		}
 		
-		return ( ) => h('div', {}, [
+		return ( ) => h('div', {class: 'app'}, [
 			h(CounterComponent, {
 					'message-string': state.message,
 					'onChangeMessage': changeMessage,
 				},
 				[]
 			),
+			h(SomeText, {class: 'some-text'}, [])
 		])
 	}
 }

@@ -1,7 +1,7 @@
 import { ComponentOptions } from './componentOptions'
 import {VNode, VNodeChild} from "./vnode";
 import {ReactiveEffect} from "chibivue";
-import {Props} from "./componentProps";
+import {initProps, Props} from "./componentProps";
 import {emit} from "./componentEmits";
 
 export type Data = Record<string, unknown>
@@ -49,4 +49,36 @@ export function createComponentInstance(
 	instance.emit = emit.bind(null, instance)
 
   return instance
+}
+
+// Compiler function registration
+type CompileFunction = (template: string) => InternalRenderFunction
+let compile: CompileFunction | undefined
+
+export function registerRuntimeCompiler(_compile: any) {
+	compile = _compile
+}
+
+// Component setup
+export function setupComponent(instance: ComponentInternalInstance) {
+	const {props} = instance.vnode
+	initProps(instance, props)
+	
+	const component = instance.type as Component
+	if (component.setup) {
+		instance.render = component.setup(
+			instance.props,
+			{
+				emit: instance.emit,
+			}
+		) as InternalRenderFunction
+	}
+	
+	if(compile && !component.render) {
+		const template = component.template ?? ''
+		if(template) {
+			instance.render = compile(template)
+		}
+		console.log(instance.render, compile)
+	}
 }
