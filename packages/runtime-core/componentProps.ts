@@ -40,7 +40,6 @@ function setFullProps(
 			}
 		}
 	}
-	console.log({rawProps, props, options})
 }
 
 export function updateProps(instance: ComponentInternalInstance, rawProps: Data | null) {

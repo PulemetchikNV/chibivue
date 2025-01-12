@@ -79,6 +79,5 @@ export function setupComponent(instance: ComponentInternalInstance) {
 		if(template) {
 			instance.render = compile(template)
 		}
-		console.log(instance.render, compile)
 	}
 }

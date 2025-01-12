@@ -1,6 +1,7 @@
 import {h, reactive} from "chibivue";
 import {CounterComponent} from "./Counter";
 import {SomeText} from "./SomeText";
+import {ComplexHTML} from "./ComplexHTML";
 
 export const AppComponent = {
 	setup() {
@@ -17,7 +18,8 @@ export const AppComponent = {
 				},
 				[]
 			),
-			h(SomeText, {class: 'some-text'}, [])
+			h(SomeText, {class: 'some-text'}, []),
+			h(ComplexHTML, {}, [])
 		])
 	}
 }
