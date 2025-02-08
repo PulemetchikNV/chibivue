@@ -1,24 +1,35 @@
+import {ElementNode, NodeTypes, TemplateChildNode, TextNode} from "./ast";
+
 export const generate = ({
-	tag,
-	props,
-	textContent
+	children,
 }: {
-	tag: string,
-	props: Record<string, string>,
-	textContent: string
+	children: TemplateChildNode[],
 }): string => {
-	if(tag === '') {
-		return `return () => null`
-	}
 	return `
-	return () => {
-		const {h} = Chibivue
-		return h("${tag}", { ${Object.entries(props)
-			.map(([k, v]) => `${k}: "${v}"`)
-			.join(', ')}
-		},
-	  ["${textContent}"]
-		);
-	}
+		return function render() {
+			const {h} = Chibivue
+			return ${genNode(children[0])}
+		}
 	`
+}
+
+const genNode = (node: TemplateChildNode): string => {
+	switch (node.type) {
+		case NodeTypes.ELEMENT:
+			return genElement(node)
+		case NodeTypes.TEXT:
+			return genText(node)
+		default:
+			return ''
+	}
+}
+
+const genElement = (el: ElementNode): string => {
+	return `h("${el.tag}", {${el.props
+		.map(({name, value}) => `${name}: "${value?.content}"`)
+		.join(', ')}}, [${el.chidlren.map(it => genNode(it)).join(', ')}])`
+}
+
+const genText = (text: TextNode): string => {
+	return `\`${text.content}\``
 }
