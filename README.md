@@ -1,5 +1,5 @@
 ## Chibivue
-*my repository for reading the chibivue book, that i've started to better understand vue3 source code*
+*my repository for reading the [chibivue book](https://book.chibivue.land/), that i've started to better understand vue3 source code*
 
 ### progress so far:
 - Minimum example
