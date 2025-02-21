@@ -4,6 +4,7 @@ import {compile} from "./compiler-dom";
 
 function compileToFunction(template: string): InternalRenderFunction {
 	const code = compile(template)
+	
 	return new Function('Chibivue', code)(runtimeDom)
 }
 registerRuntimeCompiler(compileToFunction)

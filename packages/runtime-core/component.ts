@@ -18,10 +18,11 @@ export interface ComponentInternalInstance {
   propsOptions: Props
   props: Data
   emit: (event: string, ...args: any[]) => void
+	setupState: Data
 }
 
 export type InternalRenderFunction = {
-  (): VNodeChild
+  (ctx: Data): VNodeChild
 }
 
 export type Component = ComponentOptions
@@ -44,6 +45,7 @@ export function createComponentInstance(
     propsOptions: type.props || {},
     props: {},
 	  emit: null!,
+	  setupState: {}
   }
 	
 	instance.emit = emit.bind(null, instance)
@@ -65,13 +67,22 @@ export function setupComponent(instance: ComponentInternalInstance) {
 	initProps(instance, props)
 	
 	const component = instance.type as Component
+	
 	if (component.setup) {
-		instance.render = component.setup(
+		const setupResult = component.setup(
 			instance.props,
 			{
 				emit: instance.emit,
 			}
 		) as InternalRenderFunction
+		
+		if(typeof setupResult === 'function') {
+			instance.render = setupResult
+		}else if(typeof setupResult === 'object' && setupResult !== null) {
+			instance.setupState = setupResult
+		}else{
+		
+		}
 	}
 	
 	if(compile && !component.render) {
@@ -79,5 +90,11 @@ export function setupComponent(instance: ComponentInternalInstance) {
 		if(template) {
 			instance.render = compile(template)
 		}
+	}
+	
+	// sfc
+	const {render} = component
+	if(render) {
+		instance.render = render as InternalRenderFunction
 	}
 }

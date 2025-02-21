@@ -31,8 +31,8 @@ export function createVNode(
 ) {
     const vnode: VNode = {
 		type,
-	    props,
-	    children
+    props,
+    children
 	}
     return vnode
 }

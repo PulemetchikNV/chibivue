@@ -9,6 +9,8 @@ export const ComplexHTML = {
 				h2 && (h2.textContent += '!')
 			})
 		})
+		
+		return {}
 	},
 	
 	template: `
